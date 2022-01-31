@@ -552,8 +552,8 @@ ggplot(Urchin_Resp_MetadataR2,aes(x=rsquared))+geom_histogram(stat='count',bins=
   xlab(bquote(''*MO[2]*' (mlO2/h)'))+geom_vline(xintercept=0.98,colour='red',linetype='dashed')+xlim(c(0.75,1.01))
 
 #### Q10 values
-Q10s<-read.csv('Q10_Urchins.csv')
-Q10sAcute<-read.csv('Q10_Acute_Urchins.csv')
+Q10s<-read.csv('Q10_Urchins.csv') # Q10 values for individual urchins ramped across temps (temperature ramping approach)
+Q10sAcute<-read.csv('Q10_Acute_Urchins.csv') #Q10 values for average individuals from acute temperature exposure protocol
 Q10s$Habitat<-as.factor(Q10s$Habitat)
 Q10sAcute$Habitat<-as.factor(Q10sAcute$Habitat)
 
