@@ -1,3 +1,10 @@
+##### R SCRIPT FOR PUBLICATION #####
+# Distinct realized physiologies in green sea urchin (Strongylocentrotus droebachiensis) populations from barren and kelp habitats
+# Schuster J M, Gamperl K A, Gagnon P, Bates A E
+# DOI: 10.1139/facets-2021-0125
+###################################
+
+
 # Respirometry Data processing
 
 devtools::install_github("januarharianto/respR")
