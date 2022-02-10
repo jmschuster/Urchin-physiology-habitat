@@ -5,17 +5,18 @@
 ###################################
 
 
-# Respirometry Data processing
+### Respirometry Data processing
 
 devtools::install_github("januarharianto/respR")
 library(respR) # load the library
 
-setwd("/Users/jmschuster/Desktop/PhD/Fieldwork 2020/Data/Experiment data/Exp3_Urchin_Pop_Bauline_Sept2020/Exp3.2_Urchins_22deg_23092020/")
-# Import data and Background resp data for experiment run:
-# Urchin
-Exp2.1_Urchin1_Barren<-read.csv("Exp2.1_Cha1_StrongyDroe_Barren_07092020.csv")
+setwd("/Users/jmschuster/Exp3_Urchin_Pop_Bauline_Sept2020/Exp1_Urchin_Pop_BiscayanCv_Aug2020/Experiment1_Urchins_14deg_13082020")
 
-# Background
+# Import data and Background resp data for experiment run:
+# Urchin channels (Channel 1-9)
+Exp1.1_Urchin1<-read.csv("Exp1_Cha1_StrongylocentrotusDroe_Barren_130820.csv") # load each channel into separate df
+
+# Background; blank channel (Channel 10)
 BG_Exp2.1<-read.csv("Exp2.1_Cha10_StrongyDroe_BLANK_07092020.csv")
 
 # INSPECT DATA (function also plots data)
