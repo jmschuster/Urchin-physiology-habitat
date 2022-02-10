@@ -1,7 +1,10 @@
 ##### R SCRIPT FOR PUBLICATION #####
-# Distinct realized physiologies in green sea urchin (Strongylocentrotus droebachiensis) populations from barren and kelp habitats
-# Schuster J M, Gamperl K A, Gagnon P, Bates A E
+
+# Title: Distinct realized physiologies in green sea urchin (Strongylocentrotus droebachiensis) populations from barren and kelp habitats
+# Authors: Schuster J M, Gamperl K A, Gagnon P, Bates A E
+# Date: 10. Feb 2022
 # DOI: 10.1139/facets-2021-0125
+
 ###################################
 
 
@@ -96,11 +99,49 @@ names(Exp.labs5) <- c("Bauline", "Biscayan Cove", 'Tors Cove')
 Exp.labs6 <- c("J", "K", 'L')
 names(Exp.labs6) <- c("Bauline", "Biscayan Cove", 'Tors Cove')
 
+### ACUTE MO2 per Site
+# not included in manuscript
+VO2_Acute<-ggplot(subset(Urchin_Resp_Acute,rsquared>0.98), aes(x=as.factor(Temperature_C), y=VO2_ml.h, fill=Habitat)) + 
+  geom_boxplot(outlier.shape=NA)+xlab('Temperature (°C)')+theme_bw(base_size=15)+facet_wrap(~Location,labeller = labeller(Location = Exp.labs2),scale='free_y')+
+  scale_fill_manual(values=c("goldenrod2", "#669933"))+theme(legend.position=c(0.07,0.8),legend.title=element_text(size=18,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  theme(strip.text.x = element_text(size = 16, color = "white", face = "bold"),strip.background = element_rect(fill="black"),axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))+
+  scale_x_discrete(breaks=c(4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24,26,28,30,32),labels=c(4, 6,8, 10, 12, 14, 16, 18,20, 22, 24,26,28,30,32),drop=FALSE)+labs(y=bquote(' .\nM'*O[2]*~(mL~O[2] / h)*''))
+
+# labs(title=bquote(''*MO[2]*' Acute Temperature Exposure'))+
+pdf(width = 12, useDingbats=TRUE,height = 4.5, bg="white", file="Urchin_VO2_Acute") # size for site-specific plot
+pdf(width = 5, useDingbats=TRUE,height = 4.5, bg="white", file="Urchin_VO2_Acute") # size for overall plot
+
+VO2_Acute
+dev.off()
+
+### FIG 3 ACUTE MO2 Overall
+VO2_Acute<-ggplot(subset(Urchin_Resp_Acute,rsquared>0.98), aes(x=as.factor(Temperature_C), y=VO2_ml.h, fill=Habitat)) + 
+  geom_boxplot(outlier.shape=NA)+xlab('Temperature (°C)')+theme_bw(base_size=15)+
+  scale_fill_manual(values=c("goldenrod2", "#669933"))+theme(legend.position=c(0.25,0.8),legend.title=element_text(size=18,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  theme(strip.text.x = element_text(size = 16, color = "white", face = "bold"),axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))+labs(title="A")+
+  scale_x_discrete(breaks=c(4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24,26,28,30,32),labels=c(4, 6,8, 10, 12, 14, 16, 18,20, 22, 24,26,28,30,32),drop=FALSE)+labs(y=bquote(' .\nM'*O[2]*~(mL~O[2] / h)*''))
+
+### FIG 2 ACUTE MO2 Overall MASS-INDEPENDENT
+
+VO2_MI_Acute<-ggplot(Acute_sub, aes(x=as.factor(Temperature_C), y=res.VO2.WW, fill=Habitat)) + 
+  geom_boxplot(outlier.shape=NA)+xlab('Temperature (°C)')+theme_bw(base_size=15)+
+  scale_fill_manual(values=c("goldenrod2", "#669933"))+theme(legend.position=c(0.25,0.8),legend.title=element_text(size=18,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
+  theme(strip.text.x = element_text(size = 16, color = "white", face = "bold"),axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))+labs(title="B")+
+  scale_x_discrete(breaks=c(4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24,26,28,30,32),labels=c(4, 6,8, 10, 12, 14, 16, 18,20, 22, 24,26,28,30,32),drop=FALSE)+labs(y=bquote(' .\nM'*O[2]*~(standardized)*''))
+
+pdf(width = 9, useDingbats=TRUE,height = 5, bg="white", file="Urchin_VO2_Acute_NEW")
+
+ggarrange(VO2_Acute,NULL,VO2_MI_Acute, 
+          nrow = 1, widths = c(1, 0.03, 1),align = "v",common.legend = TRUE,legend='bottom')
+
+dev.off()
+
+
 ### PLOTTING ABSOLUTE, WET MASS-SPECIFIC AND ASH-FREE DRY MASS-SPECIFIC MO2
 ## SUPP FIG S8A
 pdf(width = 11, useDingbats=TRUE,height = 5, bg="white", file="Urchin_MR_MO2_Sites")
 
-ggplot(subset(Urchin_Resp_Acute, Experiment!="2.2"), aes(x=as.factor(Temperature_C), y=VO2_AFDW_ml.h,fill=Habitat)) + 
+ggplot(subset(Urchin_Resp_Acute, Experiment!="2.2"), aes(x=as.factor(Temperature_C), y=VO2_ml.h,fill=Habitat)) + 
   geom_boxplot(outlier.shape=NA)+xlab('Temperature (°C)')+labs(y=bquote(' .\nM'*O[2]~(mL ~ O[2] / h)*''))+theme_bw(base_size=15)+
   scale_fill_manual(values=c("goldenrod2", "#669933"))+theme(legend.position=c(0.1,0.8),legend.title=element_text(size=18,face='bold'),legend.text=element_text(size=15))+facet_wrap(~Location,labeller = labeller(Location = Exp.labs2))+
   theme(strip.text.x = element_text(size = 16, color = "white", face = "bold"),strip.background = element_rect(fill="black"),panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))+
@@ -134,20 +175,8 @@ ggplot(subset(Urchin_Resp_Acute, Experiment!="2.2"), aes(x=as.factor(Temperature
 dev.off()
 
 
-### NEEDED ?
-# GAM
 Urchin_Resp_Acute$Habitat<-as.factor(Urchin_Resp_Acute$Habitat)
 Model_DF_Resp_Acute<-Urchin_Resp_Acute %>% filter(Habitat !='Blank') %>% droplevels()
-UM3c<-gam(MR_AFDW_ml.h.g~s(Temperature_C,by=Habitat,k=3),data=subset(Model_DF_Resp_Acute,Location=='Tors Cove'),na.action=na.omit)
-UM4<-gam(VO2_AFDW_ml.h~s(Temperature_C,by=Habitat,k=3),data=subset(Model_DF_Resp_Acute,Location=='Biscayan Cove'),na.action=na.omit)
-
-GAM3c<-plot_smooths(
-  model = UM3c,
-  series = Temperature_C,
-  comparison = Habitat)+labs(title="AFDW",tag="A")+ylab('Metabolic Rate (mlO2/h/g)')+xlab("Temperature (°C)")+scale_x_continuous(limits=c(4,30),breaks=c(4,6,8,10,12,14,16,18,20,22,24,26,28,30))+
-  theme(legend.position = "bottom")
-
-GAM3
 
 # PLOT URCHIN WEIGHTS
 
@@ -276,17 +305,18 @@ color_Hab <- c("white","grey",'black')
 TPC_BIS<-subset(Urchin_Resp_TPCs,Experiment=='4.3') # use original Urchin_Resp_TPCs file (without added continuous temps)
 TPC_BIS <- TPC_BIS %>% filter(Habitat != 'Blank') %>% droplevels()
 TPC_BIS$Replicate_Chamber<-as.factor(TPC_BIS$Replicate_Chamber)
+TPC_BIS<-TPC_BIS[!is.na(TPC_BIS$Temp),] # remove NA rows
 
-### FIG 3 TPC MO2
+### FIG 4 TRC MO2
 # Absolute MO2 from Ramping Protocol Urchins (boxplot)
-VO2_TPC<-ggplot(subset(Urchin_Resp_TPCs,Experiment=='4.3'), aes(x=as.factor(Temp), y=VO2_AFDW_ml.h, fill=Habitat))+ geom_rect(xmin=0, xmax=6, ymin=0, ymax=Inf, fill='lightgrey') + 
+VO2_TPC<-ggplot(subset(Urchin_Resp_TPCs,Experiment=='4.3'), aes(x=as.factor(Temp), y=VO2_ml.h, fill=Habitat))+ geom_rect(xmin=0, xmax=6, ymin=0, ymax=Inf, fill='lightgrey') + 
   geom_boxplot(outlier.shape=NA)+xlab('Temperature (°C)')+theme_bw(base_size=15)+
   scale_fill_manual(values=c("goldenrod2", "#669933"))+theme(legend.position=c(0.2,0.8),legend.title=element_text(size=18,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
   theme(strip.text.x = element_text(size = 16, color = "white", face = "bold"),strip.background = element_rect(fill="black"),axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))+labs(title="A")+labs(y=bquote(' .\nM'*O[2]*~(mL~O[2] / h)*''))+
   scale_x_discrete(breaks=c(4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24,26,28,30,32),labels=c(4, 6,8, 10, 12, 14, 16, 18,20, 22, 24,26,28,30,32),drop=FALSE)
 
 # Absolute MO2 from Ramping Protocol Urchins (individual TRC curves)
-VO2_TPCi<-ggplot(TPC_BIS, aes(x=Temp, y=VO2_AFDW_ml.h)) + 
+VO2_TPCi<-ggplot(TPC_BIS, aes(x=Temp, y=VO2_ml.h)) + 
   geom_line(aes(group=Replicate_Chamber,colour=Habitat,linetype=Habitat),size=1)+geom_point(aes(shape=Habitat,fill=Habitat),size=3)+xlab('Temperature (°C)')+theme_bw(base_size=15)+
   theme(legend.position='none',legend.title=element_text(size=16,face='bold'), legend.text=element_text(size=14),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+scale_colour_manual(values=c("goldenrod2", "#669933"))+
   theme(strip.text.x = element_text(size = 16, color = "white", face = "bold"),strip.background = element_rect(fill="black"),axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))+labs(title="B")+labs(fill="Habitat", colour="Urchin")+scale_fill_manual(values=c('white','black','grey'))+
@@ -298,48 +328,10 @@ ggarrange(VO2_TPC,NULL,VO2_TPCi,
           nrow = 1, widths = c(1, 0.03, 1),align = "v",common.legend = TRUE,legend='bottom')
 
 dev.off()
-### FIG 2 ACUTE MO2 per Site
-
-VO2_Acute<-ggplot(subset(Urchin_Resp_Acute,rsquared>0.98), aes(x=as.factor(Temperature_C), y=VO2_AFDW_ml.h, fill=Habitat)) + 
-  geom_boxplot(outlier.shape=NA)+xlab('Temperature (°C)')+theme_bw(base_size=15)+facet_wrap(~Location,labeller = labeller(Location = Exp.labs2),scale='free_y')+
-  scale_fill_manual(values=c("goldenrod2", "#669933"))+theme(legend.position=c(0.07,0.8),legend.title=element_text(size=18,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
-  theme(strip.text.x = element_text(size = 16, color = "white", face = "bold"),strip.background = element_rect(fill="black"),axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))+
-  scale_x_discrete(breaks=c(4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24,26,28,30,32),labels=c(4, 6,8, 10, 12, 14, 16, 18,20, 22, 24,26,28,30,32),drop=FALSE)+labs(y=bquote(' .\nM'*O[2]*~(mL~O[2] / h)*''))
-
-# labs(title=bquote(''*MO[2]*' Acute Temperature Exposure'))+
-pdf(width = 12, useDingbats=TRUE,height = 4.5, bg="white", file="Urchin_VO2_Acute") # size for site plot
-pdf(width = 5, useDingbats=TRUE,height = 4.5, bg="white", file="Urchin_VO2_Acute") # size for overall plot
-
-VO2_Acute
-dev.off()
-### FIG 2 ACUTE MO2 Overall
-
-VO2_Acute<-ggplot(subset(Urchin_Resp_Acute,rsquared>0.98), aes(x=as.factor(Temperature_C), y=VO2_AFDW_ml.h, fill=Habitat)) + 
-  geom_boxplot(outlier.shape=NA)+xlab('Temperature (°C)')+theme_bw(base_size=15)+
-  scale_fill_manual(values=c("goldenrod2", "#669933"))+theme(legend.position=c(0.25,0.8),legend.title=element_text(size=18,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
-  theme(strip.text.x = element_text(size = 16, color = "white", face = "bold"),axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))+labs(title="A")+
-  scale_x_discrete(breaks=c(4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24,26,28,30,32),labels=c(4, 6,8, 10, 12, 14, 16, 18,20, 22, 24,26,28,30,32),drop=FALSE)+labs(y=bquote(' .\nM'*O[2]*~(mL~O[2] / h)*''))
-
-### FIG 2 ACUTE MO2 Overall MASS-INDEPENDENT
-
-VO2_MI_Acute<-ggplot(Acute_sub, aes(x=as.factor(Temperature_C), y=res.VO2.WW, fill=Habitat)) + 
-  geom_boxplot(outlier.shape=NA)+xlab('Temperature (°C)')+theme_bw(base_size=15)+
-  scale_fill_manual(values=c("goldenrod2", "#669933"))+theme(legend.position=c(0.25,0.8),legend.title=element_text(size=18,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
-  theme(strip.text.x = element_text(size = 16, color = "white", face = "bold"),axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)))+labs(title="B")+
-  scale_x_discrete(breaks=c(4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24,26,28,30,32),labels=c(4, 6,8, 10, 12, 14, 16, 18,20, 22, 24,26,28,30,32),drop=FALSE)+labs(y=bquote(' .\nM'*O[2]*~(standardized)*''))
-
-pdf(width = 9, useDingbats=TRUE,height = 5, bg="white", file="Urchin_VO2_Acute_NEW")
-
-ggarrange(VO2_Acute,NULL,VO2_MI_Acute, 
-          nrow = 1, widths = c(1, 0.03, 1),align = "v",common.legend = TRUE,legend='bottom')
-
-dev.off()
 
 
-
-
-### COMPOSITE PLOT FOR BISCAYAN COVE FIELD_FRESH TPCs ONLY
-### SUPP FIG S10
+### COMPOSITE PLOT FOR BISCAYAN COVE FIELD_FRESH TRCs 
+### SUPP FIG S9
 Biscayan_FF_WW<-ggplot(subset(Urchin_Resp_TPCs,Experiment=='4.3'), aes(x=as.factor(Temp), y=MR_WetWeight_ml.h.g, fill=Habitat)) + 
   geom_boxplot(outlier.shape=NA)+xlab('Temperature (°C)')+labs(y=bquote(' .\nM'*O[2]~(mL ~ O[2] / h / g)*''))+theme_bw(base_size=15)+
   scale_fill_manual(values=c("goldenrod2", "#669933"))+theme(legend.position=c(0.2,0.8),legend.title=element_text(size=18,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
@@ -362,7 +354,6 @@ AFDW_TPCi<-ggplot(TPC_BIS, aes(x=Temp, y=MR_AFDW_ml.h.g)) +
   labs(title="",tag='D')+labs(fill="Habitat", colour="Urchin")+scale_colour_manual(values=c("goldenrod2", "#669933"))+scale_fill_manual(values=c('white','black','grey'))+
   scale_x_continuous(limits=c(3, 33),breaks=c(4, 6,8, 10,12, 14,16, 18,20, 22,24, 26,28, 30, 32),labels=c(4, 6,8, 10,12, 14,16, 18, 20,22,24, 26, 28,30, 32))
 
-
 Biscayan_FF_AFDW<-ggplot(subset(Urchin_Resp_TPCs,Experiment=='4.3'), aes(x=as.factor(Temp), y=MR_AFDW_ml.h.g, fill=Habitat)) + 
   geom_boxplot(outlier.shape=NA)+xlab('Temperature (°C)')+labs(y=bquote(' .\nM'*O[2]~(mL ~ O[2] / h / g)*''))+theme_bw(base_size=15)+
   scale_fill_manual(values=c("goldenrod2", "#669933"))+theme(legend.position=c(0.2,0.8),legend.title=element_text(size=18,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
@@ -375,7 +366,8 @@ ggarrange(Biscayan_FF_WW, WW_TPCi,
           nrow = 1, ncol = 2, align = "v",common.legend = TRUE,legend='bottom')
 
 dev.off()
-# AFDW
+
+# AFDW; not included
 pdf(width = 9, useDingbats=TRUE,height = 5, bg="white", file="Biscayan_TPC_Composite_AFDW")
 
 ggarrange(Biscayan_FF_AFDW, AFDW_TPCi, 
@@ -384,10 +376,10 @@ ggarrange(Biscayan_FF_AFDW, AFDW_TPCi,
 dev.off()
 
 # GAM 
-Model_DF_Resp_TPC<-Urchin_Resp_TPCsOG %>% filter(Habitat !='Blank') %>% droplevels()
+Model_DF_Resp_TPC<-Urchin_Resp_TPCs %>% filter(Habitat !='Blank') %>% droplevels()
 Model_DF_Resp_TPC$Habitat<-as.factor(Model_DF_Resp_TPC$Habitat)
 UM5<-gam(MR_AFDW_ml.h.g~s(Temp,by=Habitat,k=5),data=subset(Model_DF_Resp_TPC,Experiment=='4.3'),na.action=na.omit)
-UM6<-gam(VO2_AFDW_ml.h~s(Temp,by=Habitat,k=7),data=subset(Model_DF_Resp_TPC,Experiment=='4.3'),na.action=na.omit)
+UM6<-gam(VO2_ml.h~s(Temp,by=Habitat,k=7),data=subset(Model_DF_Resp_TPC,Experiment=='4.3'),na.action=na.omit)
 
 GAM6<-plot_smooths(
   model = UM6,
@@ -397,12 +389,16 @@ GAM6<-plot_smooths(
 
 GAM6
 
-### COMPARING METABOLIC RATES BETWEEN RAMP/ACUTE
+################################################################
+### COMPARING METABOLIC RATES BETWEEN ACUTE AND RAMPING APPROACH
+################################################################
+
 TPC_vs_Acute<-read.csv('TPC_vs_Acute.csv')
 TPC_vs_Acute$Replicate<-as.factor(TPC_vs_Acute$Replicate)
 TPC_vs_Acute$Rep_2<-as.factor(TPC_vs_Acute$Rep_2)
 
 
+# Boxplots of acute vs ramping MO2 rates (only included absolute and mass-independent MO2 values in manuscript)
 Rate_Comp_AFDW<-ggplot(subset(TPC_vs_Acute,Temp<30), aes(x=as.factor(Temp), y=MR_AFDW,fill=Treatment)) + 
   geom_boxplot(outlier.shape=NA)+xlab('Temperature (°C)')+labs(y=bquote(' .\nM'*O[2]*~(mL~O[2] / h / g)*''))+theme_bw(base_size=15)+
   theme(legend.position=c(0.1,0.7),legend.title=element_text(size=18,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
@@ -442,19 +438,19 @@ dev.off()
 ### Fitting a curve for each treatment
 TPC_vs_Acute$Treatment<-as.factor(TPC_vs_Acute$Treatment)
 UM6<-gamm(MR_AFDW~s(Temp,by=Treatment,k=5),random=list(Rep_2=~1),data=subset(TPC_vs_Acute,Temp<30),na.action=na.omit)
-UM6pois<-gamm(MR_AFDW~s(Temp,by=Treatment,k=5),random=list(Rep_2=~1),data=subset(TPC_vs_Acute,Temp<30),na.action=na.omit,family='poisson')
+UM6pois<-gamm(MR_AFDW~s(Temp,by=Treatment,k=5),random=list(Rep_2=~1),data=subset(TPC_vs_Acute,Temp<30),na.action=na.omit,family='poisson') # comparing with different family
 UM7<-gamm(MR_MassIndep~s(Temp,by=Treatment,k=5),random=list(Treatment=~1,Rep_2=~1),data=subset(TPC_vs_Acute,Temp<30),na.action=na.omit)
 UM8<-gamm(MR_WW~s(Temp,by=Treatment,k=5),random=list(Treatment=~1,Rep_2=~1),data=subset(TPC_vs_Acute,Temp<30),na.action=na.omit)
 UM9<-gamm(VO2~s(Temp,by=Treatment,k=5),random=list(Treatment=~1,Rep_2=~1),data=subset(TPC_vs_Acute,Temp<30),na.action=na.omit)
 
-UM4lm<-lm(VO2~Temp*Treatment,data=subset(TPC_vs_Acute,Temp<30),na.action=na.omit)
+UM4lm<-lm(VO2~Temp*Treatment,data=subset(TPC_vs_Acute,Temp<30),na.action=na.omit) # comparing with linear model
 
 library(tidymv)
 
 theme_set(theme_bw(base_size=15))
 
 
-#### SUPP FIG S8 TPC vs Acute gamms
+#### SUPP FIG S7 Acute vs Ramping MO2 GAMMs
 pdf(width = 11, useDingbats=TRUE,height = 10, bg="white", file="TPC_vs_Acute_gam")
 
 par(mfrow=c(2,2))
@@ -495,19 +491,12 @@ mtext('AFDM', side=3, line=0.5, font=1,cex=1.5,adj=0)
 
 dev.off()
 
-### FIG 9
-pdf(width = 11, useDingbats=TRUE,height = 4, bg="white", file="Acute_vs_TPC_GAM")
 
-ggarrange(GAM2, GAM3, GAM1,
-          nrow = 1, ncol = 3,
-          align = "v",common.legend = TRUE,legend='bottom')
-
-dev.off()
-
-#### Supplementary Figure Rsquared vs MO2
+####### QUALITY OF MO2 MEASUREMENTS ########
+#### Supplementary Figure S5 Rsquared vs MO2
 pdf(width = 5, useDingbats=TRUE,height = 4, bg="white", file="Rsquared")
 
-ggplot(Urchin_Resp_Acute,aes(x=VO2_AFDW_ml.h,y=rsquared))+geom_point()+theme_bw(base_size=15)+
+ggplot(Urchin_Resp_Acute,aes(x=VO2_ml.h,y=rsquared))+geom_point()+theme_bw(base_size=15)+
   geom_hline(yintercept=0.98,colour='red',linetype='dashed')+xlab(bquote(' .\nM'*O[2]~(mL~O[2] / h)*''))+ylab(expression(italic("r"^{"2"})))+
   theme(axis.title.x = element_text(margin = margin(t = 15, r = 0, b = 0, l = 0)))
 
@@ -516,36 +505,45 @@ dev.off()
 ggplot(Urchin_Resp_Acute,aes(x=rsquared))+geom_histogram(stat='count',bins=30)+theme_bw(base_size=15)+
   xlab(bquote(''*MO[2]*' (mlO2/h)'))+geom_vline(xintercept=0.98,colour='red',linetype='dashed')+xlim(c(0.75,1.01))
 
-#### Q10 values
+####################
+#### Q10 values ####
+####################
+
 Q10s<-read.csv('Q10_Urchins.csv') # Q10 values for individual urchins ramped across temps (temperature ramping approach)
 Q10sAcute<-read.csv('Q10_Acute_Urchins.csv') #Q10 values for average individuals from acute temperature exposure protocol
 Q10s$Habitat<-as.factor(Q10s$Habitat)
 Q10sAcute$Habitat<-as.factor(Q10sAcute$Habitat)
 
-# Q10s for TPC ramping
+# Q10s for RAMPING PROTOCOL
+# COLD RANGE
 Q10plot<-ggplot(Q10s, aes(x=Habitat, y=Q10_4_14,fill=Habitat)) + 
   geom_boxplot(outlier.shape=NA)+xlab('Habitat')+labs(y=bquote(''*Q[10]*' (4-14°C)'))+theme_bw(base_size=14)+theme(legend.position=c(0.1,0.7),legend.title=element_text(size=14,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
   theme(strip.text.x = element_text(size = 14, color = "white", face = "bold"),strip.background = element_rect(fill="black"))+labs(title=bquote(''*Q[10]*' Ramping Protocol'),tag="C")+
   scale_fill_manual(values=c("goldenrod2", "#669933"))
 
+# WARM RANGE
 Q10plot2<-ggplot(Q10s, aes(x=Habitat, y=Q10_14_26,fill=Habitat)) + 
   geom_boxplot(outlier.shape=NA)+xlab('Habitat')+labs(y=bquote(''*Q[10]*' (14-26°C)'))+theme_bw(base_size=14)+theme(legend.position=c(0.1,0.7),legend.title=element_text(size=14,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
   theme(strip.text.x = element_text(size = 14, color = "white", face = "bold"),strip.background = element_rect(fill="black"))+labs(title=bquote(''*Q[10]*' Ramping Protocol'),tag="D")+
   scale_fill_manual(values=c("goldenrod2", "#669933"))
 
-# Q10s for Acute
+# Q10s for ACUTE EXPOSURE
+# COLD RANGE
 Q10AcuteC<-ggplot(Q10sAcute, aes(x=Habitat, y=Q10_4_14,fill=Habitat)) + 
   geom_boxplot(outlier.shape=NA)+xlab('Habitat')+labs(y=bquote(''*Q[10]*' (4-14°C)'))+theme_bw(base_size=14)+theme(legend.position=c(0.1,0.7),legend.title=element_text(size=14,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
   theme(strip.text.x = element_text(size = 14, color = "white", face = "bold"),strip.background = element_rect(fill="black"))+labs(title=bquote(''*Q[10]*' Acute Protocol'),tag="A")+
   scale_fill_manual(values=c("goldenrod2", "#669933"))
 
+# WARM RANGE
 Q10AcuteH<-ggplot(Q10sAcute, aes(x=Habitat, y=Q10_14_26,fill=Habitat)) + 
   geom_boxplot(outlier.shape=NA)+xlab('Habitat')+labs(y=bquote(''*Q[10]*' (14-26°C)'))+theme_bw(base_size=14)+theme(legend.position=c(0.1,0.7),legend.title=element_text(size=14,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
   theme(strip.text.x = element_text(size = 14, color = "white", face = "bold"),strip.background = element_rect(fill="black"))+labs(title=bquote(''*Q[10]*' Acute Protocol'),tag="B")+
   scale_fill_manual(values=c("goldenrod2", "#669933"))
 
+#############################
+### MAX MR & TAS for TRCs ###
+#############################
 
-### MAX MR & TAS for TPCs
 MaxMR<-ggplot(Q10s, aes(x=Habitat, y=Max_MR,fill=Habitat)) + 
   geom_boxplot(outlier.shape=NA)+xlab('Habitat')+labs(y=bquote(''*(mL ~ O[2] / h)*''))+theme_bw(base_size=14)+theme(legend.position=c(0.1,0.7),legend.title=element_text(size=14,face='bold'),legend.text=element_text(size=15),panel.grid.major = element_blank(), panel.grid.minor = element_blank())+
   theme(strip.text.x = element_text(size = 14, color = "white", face = "bold"),strip.background = element_rect(fill="black"))+labs(title=bquote(''*MMR[T]*''),tag="E")+
@@ -581,13 +579,17 @@ ggarrange(Q10plot, Q10plot2,Q10AcuteC, Q10AcuteH,
           nrow = 2, ncol = 2,
           align = "v",common.legend = TRUE,legend='bottom')
 
-# Suppl fig for MMRT and AST per Wet Weight and AFDW
+# Suppl fig S10 for MMRT and AST per Wet Weight and AFDW
 pdf(width = 7, useDingbats=TRUE,height = 7, bg="white", file="Q10_TPC_WW_AFDW")
 ggarrange(MaxMR_WW, MaxMR_AFDW,TAS_WW, TAS_AFDW, 
           nrow = 2, ncol = 2,
           align = "v",common.legend = TRUE,legend='bottom')
 dev.off()
-##### MAP OF SITES
+
+########################
+##### MAP OF SITES #####
+########################
+
 library(ggplot2)
 library('sf')
 library('rnaturalearth')
@@ -607,6 +609,7 @@ world <- ne_states(country='canada',returnclass = 'sf')
 world_points<- st_centroid(world)
 world_points <- cbind(world, st_coordinates(st_centroid(world$geometry)))
 
+# MAP OF NEWFOUNDLAND
 NL_map<-ggplot(data = world) +
   geom_sf() +
   coord_sf(xlim = c(-61.00, -52.00), ylim = c(46.00, 52.00), expand = FALSE) +
@@ -622,6 +625,7 @@ Site<-c("Biscayan Cove", 'Tors Cove', 'Bauline')
 SiteLab<-c("B", 'C', 'A')
 Locs<-tibble(Lat,Long,Site,SiteLab)
 
+# MAP OF AVALON PENINSULA
 Avalon<-ggplot(data = world) +
   geom_sf() +
   labs( x = "Longitude", y = "Latitude") +
@@ -634,6 +638,7 @@ Avalon<-ggplot(data = world) +
                               colour='darkcyan',size=4,shape=25,fill='darkcyan')+
   geom_text_repel(data=Locs,aes(x=Long,y=Lat,label=Site),size=4)
 
+# FINAL MAP
 pdf(width = 7, useDingbats=TRUE,height = 7, bg="white", file="Map")
 
 Avalon + annotation_custom(ggplotGrob(NL_map), xmin = -54.45, xmax = -53.4, 
@@ -644,6 +649,9 @@ dev.off()
 # END OF PAPER FIGURES #
 
 ###################################
+###### STATISTICAL ANALYSES #######
+###################################
+
 # ANOVAs
 library(lmer)
 # One-Way ANOVA for Biscayan Cove TPC urchins Q10 etc.
@@ -667,7 +675,7 @@ library(outliers)
 test <- grubbs.test(Q10s$Q10_4_14)
 test # confirms highest kelp value as an outlier! Ok to remove
 
-# Non-parametric Mann-Whitney U test:
+# Non-parametric test:
 wilcox.test(Q10_4_14 ~ Habitat, data=Q10s)
 kruskal.test(Q10_4_14 ~ Habitat, data=Q10s)
 
@@ -699,32 +707,22 @@ summary(A4)
 TukeyHSD(A4, which = "Location")
 TukeyHSD(A4, which = "Habitat")
 
-## GAMs Acute Data
+## GAMMs ACUTE MO2 DATA
 theme_set(theme_bw(base_size=15))
 Urchin_Resp_Acute<-Urchin_Resp_Acute %>% filter(Habitat !='Blank') %>% droplevels()
 Urchin_Resp_Acute$Habitat<-as.factor(Urchin_Resp_Acute$Habitat)
 
-# Acute approach data (Location random effect)
-UM4gamm<-gamm(scale(VO2_AFDW_ml.h)~s(Temperature_C,by=Habitat,k=4),random=list(Location=~1),data=subset(Urchin_Resp_Acute,rsquared>0.98),na.action=na.omit)
-UM3gamm<-gamm(scale(MR_AFDW_ml.h.g)~s(Temperature_C,by=Habitat,k=4),random=list(Location=~1),data=subset(Urchin_Resp_Acute,rsquared>0.98),na.action=na.omit)
-UM2gamm<-gamm(scale(MR_WetWeight_ml.h.g)~s(Temperature_C,by=Habitat,k=4),random=list(Location=~1),data=subset(Urchin_Resp_Acute,rsquared>0.98),na.action=na.omit)
-UM1gamm<-gamm(scale(MR_MetabTiss_ml.h.g)~s(Temperature_C,by=Habitat,k=4),random=list(Location=~1),data=subset(Urchin_Resp_Acute,rsquared>0.98),na.action=na.omit)
-
-### FOLLOWING REVIEWER COMMENTS:
-# Acute approach data (Location random effect with MASS COVARIATE)
-UM4Wgamm<-gamm(scale(VO2_AFDW_ml.h)~s(Temperature_C,by=Habitat,k=4)+Wet_weight_g,random=list(Location=~1),data=subset(Urchin_Resp_Acute,rsquared>0.98),na.action=na.omit)
+# Acute approach data (Location random effect and MASS COVARIATE)
+UM4Wgamm<-gamm(scale(VO2_ml.h)~s(Temperature_C,by=Habitat,k=4)+Wet_weight_g,random=list(Location=~1),data=subset(Urchin_Resp_Acute,rsquared>0.98),na.action=na.omit)
 UM3Wgamm<-gamm(scale(MR_AFDW_ml.h.g)~s(Temperature_C,by=Habitat,k=4)+Wet_weight_g,random=list(Location=~1),data=subset(Urchin_Resp_Acute,rsquared>0.98),na.action=na.omit)
 UM2Wgamm<-gamm(scale(MR_WetWeight_ml.h.g)~s(Temperature_C,by=Habitat,k=4)+Wet_weight_g,random=list(Location=~1),data=subset(Urchin_Resp_Acute,rsquared>0.98),na.action=na.omit)
-UM1Wgamm<-gamm(scale(MR_MetabTiss_ml.h.g)~s(Temperature_C,by=Habitat,k=4)+Wet_weight_g,random=list(Location=~1),data=subset(Urchin_Resp_Acute,rsquared>0.98),na.action=na.omit)
-
-UM4WgammA<-gamm(scale(VO2_AFDW_ml.h)~s(Temperature_C,by=Habitat,k=4)+AFDW_g,random=list(Location=~1),data=subset(Urchin_Resp_Acute,rsquared>0.98),na.action=na.omit)
 
 # POLYNOMIAL LME MODEL for comparison
-UM4lme<-lme(scale(VO2_AFDW_ml.h)~Habitat*poly(Temperature_C,3)+Wet_weight_g,random=~1|Location,data=Urchin_Resp_Acute,na.action=na.omit)
+UM4lme<-lme(scale(VO2_ml.h)~Habitat*poly(Temperature_C,3)+Wet_weight_g,random=~1|Location,data=Urchin_Resp_Acute,na.action=na.omit)
 plot(residuals(UM4lme))
 
 # pattern and significance agree with gamm results
-ggplot(Urchin_Resp_Acute, aes(x=Temperature_C, y=VO2_AFDW_ml.h,colour=Habitat)) +
+ggplot(Urchin_Resp_Acute, aes(x=Temperature_C, y=VO2_ml.h,colour=Habitat)) +
   geom_point() +
   stat_smooth(method = lm, formula = y ~ poly(x, 3, raw = TRUE))+ylab('O2 ml/h')+xlab('Temperature (°C)')
 
@@ -732,6 +730,7 @@ Urchin_Resp_Acute<-Urchin_Resp_Acute %>% filter(Habitat !='Blank') %>% droplevel
 col_test2<-c('goldenrod2', '#669933')[as.numeric(Urchin_Resp_Acute$Habitat)]
 col_transp2<-adjustcolor(col_test2, alpha.f = 0.3)
 
+# HABITAT DIFFERENCES FOR AFDM-SPECIFIC MO2
 plot(UM3gamm$gam,select=1,shade=TRUE,shade.col=rgb(10,0,255,40,maxColorValue=255),col="#330066",lty=1,lwd=4,cex=1.8,yaxt='n', cex.axis=1.5, cex.lab=1.6, xlab="",ylab=('ml/h/g'),cex.main=1.6,rug=FALSE,ylim=c(-2,2))
 axis(side=2,at=c(-1,0,1),cex.axis=1.5)
 par(new=TRUE)
@@ -740,6 +739,7 @@ text(5,1.5,"a",cex=1.8)
 legend("bottomright", c("Barren","Kelp"), lwd=3,col=c("#330066", "#669933"), bty="n", cex=1.5)
 mtext('AFDW MR', side=3, line=0.5, font=2,cex=1.5)
 
+# HABITAT DIFFERENCES FOR WET MASS-SPECIFIC MO2
 plot(UM2gamm$gam,select=1,shade=TRUE,shade.col=rgb(10,0,255,40,maxColorValue=255),col="#330066",lty=1,lwd=4,cex=1.8,yaxt='n', cex.axis=1.5, cex.lab=1.6, xlab="",ylab=('ml/h/g'),cex.main=1.6,rug=FALSE,ylim=c(-2,2))
 axis(side=2,at=c(-1,0,1),cex.axis=1.5)
 par(new=TRUE)
@@ -747,90 +747,28 @@ plot(UM2gamm$gam,shade=TRUE,select=2,shade.col=rgb(100,255,0,40,maxColorValue=25
 text(5,1.5,"a",cex=1.8)
 mtext('Wet Weight MR', side=3, line=0.5, font=2,cex=1.5)
 
-plot(UM1gamm$gam,select=1,shade=TRUE,shade.col=rgb(10,0,255,40,maxColorValue=255),col="#330066",lty=1,lwd=4,cex=1.8,yaxt='n', cex.axis=1.5, cex.lab=1.6, xlab="",ylab=('ml/h/g'),cex.main=1.6,rug=FALSE,ylim=c(-2,2))
-axis(side=2,at=c(-1,0,1),cex.axis=1.5)
-par(new=TRUE)
-plot(UM1gamm$gam,shade=TRUE,select=2,shade.col=rgb(100,255,0,40,maxColorValue=255),col="#669933",lty=1,lwd=4,cex=1.8, cex.axis=1.5, cex.lab=1.6, xlab="",ylab="",yaxt="n", xaxt="n",cex.main=1.8,rug=FALSE,ylim=c(-2,2))
-text(5,1.5,"a",cex=1.8)
-mtext('Metabolizing Tissue MR', side=3, line=0.5, font=2,cex=1.5)
 
 ## GAMs TPC data
 Urchin_Resp_TPCs<-Urchin_Resp_TPCs %>% filter(Habitat !='Blank') %>% droplevels()
 Urchin_Resp_TPCs$Habitat<-as.factor(Urchin_Resp_TPCs$Habitat)
 TPC_sub<-Urchin_Resp_TPCs %>% filter(Experiment=='4.3' & Habitat!="") %>% droplevels()
 
-UM5gamm<-gamm(scale(VO2_AFDW_ml.h)~s(Temp,by=Habitat,k=4),random=list(Replicate_Chamber=~1),data=TPC_sub,na.action=na.omit)
-UM5lme<-lme(scale(VO2_AFDW_ml.h)~Habitat*poly(Temp,3),random=~1|Replicate_Chamber,data=TPC_sub,na.action=na.omit)
+UM5gamm<-gamm(scale(VO2_ml.h)~s(Temp,by=Habitat,k=4),random=list(Replicate_Chamber=~1),data=TPC_sub,na.action=na.omit)
+UM5lme<-lme(scale(VO2_ml.h)~Habitat*poly(Temp,3),random=~1|Replicate_Chamber,data=TPC_sub,na.action=na.omit)
 
 # pattern and significance confirm gamm results
-ggplot(TPC_sub, aes(x=Temp, y=VO2_AFDW_ml.h,colour=Habitat)) +
+ggplot(TPC_sub, aes(x=Temp, y=VO2_ml.h,colour=Habitat)) +
   geom_point() +
   stat_smooth(method = lm, formula = y ~ poly(x, 3, raw = TRUE))+ylab('O2 ml/h')+xlab('Temperature (°C)')
 
 # TPC data (with MASS COVARIATE)
-UM5Wgamm<-gamm(scale(VO2_AFDW_ml.h)~s(Temp,by=Habitat,k=4)+Wet_weight_g,random=list(Replicate_Chamber=~1),data=TPC_sub,na.action=na.omit)
+UM5Wgamm<-gamm(scale(VO2_ml.h)~s(Temp,by=Habitat,k=4)+Wet_weight_g,random=list(Replicate_Chamber=~1),data=TPC_sub,na.action=na.omit)
 
-### SUPP FIG S7 MO2 gamms Acute & TPC (with mass-covariate (A,B); mass-independent (C,D))
-pdf(width = 10, useDingbats=TRUE,height = 9, bg="white", file="VO2_gamms_WeightCovar_MassIndep")
-
-par(mfrow=c(2,2))
-par(mar=c(4,5.5,1,0),oma=c(1,0.5,1,1))
-
-# Acute Absolute MO2 with mass-covariate
-plot(scale(VO2_AFDW_ml.h)~Temperature_C,data=Urchin_Resp_Acute,yaxt='n',xaxt='n',ylab='',xlab='',col=col_transp2,pch=16,ylim=c(-3,4))
-par(new=TRUE)
-plot(UM4WgammA$gam,select=1,shade=TRUE,shade.col=rgb(255,180,102,60,maxColorValue=255),col="goldenrod2",lty=1,lwd=4,cex=1.8,yaxt='n',xaxt='n',cex.axis=1.5, cex.lab=1.6, xlab="Temperature (°C)",ylab=expression(' .\nM'*O[2]~(mL ~ O[2] / h)*''),cex.main=1.6,rug=FALSE,ylim=c(-3,4))
-axis(side=2,at=c(-2,0,2,4),cex.axis=1.5)
-axis(side=1,at=c(5,15,25),cex.axis=1.5)
-par(new=TRUE)
-plot(UM4WgammA$gam,shade=TRUE,select=2,shade.col=rgb(100,255,0,60,maxColorValue=255),col="#669933",lty=1,lwd=4,cex=1.8, cex.axis=1.5, cex.lab=1.6, xlab="",ylab="",yaxt="n", xaxt="n",cex.main=1.8,rug=FALSE,ylim=c(-3,4))
-text(5,3.3,"A",cex=1.8)
-legend("bottomright", c("Barrens","Kelp"), lwd=3,col=c("goldenrod2", "#669933"), bty="n", cex=1.2)
-mtext('Acute Protocol', side=3, line=0.5, font=1,cex=1.8,adj=0)
-
-# Ramped (TPC) Absolute MO2 with mass-covariate
-plot(scale(VO2_AFDW_ml.h)~Temp,data=subset(Urchin_Resp_TPCs,Experiment=='4.3'),yaxt='n',xaxt='n',ylab='',xlab='',col=col_transp2,pch=16,ylim=c(-2,2))
-par(new=TRUE)
-plot(UM5Wgamm$gam,select=1,shade=TRUE,shade.col=rgb(255,180,102,60,maxColorValue=255),col="goldenrod2",lty=1,lwd=4,cex=1.8,yaxt='n',xaxt='n', cex.axis=1.5, cex.lab=1.6,xlim=c(4,32),ylab='',xlab=('Temperature (°C)'),cex.main=1.6,rug=FALSE,ylim=c(-2,2))
-axis(side=2,at=c(-2,-1,-0,1,2),cex.axis=1.5)
-axis(side=1,at=c(5,15,25),cex.axis=1.5)
-par(new=TRUE)
-plot(UM5Wgamm$gam,shade=TRUE,select=2,shade.col=rgb(100,255,0,60,maxColorValue=255),col="#669933",lty=1,lwd=4,cex=1.8, cex.axis=1.5, cex.lab=1.6, xlab="",ylab="",yaxt="n", xaxt="n",cex.main=1.8,rug=FALSE,ylim=c(-2,2))
-text(5,1.5,"B",cex=1.8)
-legend("bottomright", c("Barrens","Kelp"), lwd=3,col=c("goldenrod2", "#669933"), bty="n", cex=1.2)
-mtext('Ramping Protocol', side=3, line=0.5, font=1,adj=0,cex=1.8)
-
-# Acute MASS-INDEPENDENT MO2
-plot(scale(VO2_AFDW_ml.h)~Temperature_C,data=Urchin_Resp_Acute,yaxt='n',xaxt='n',ylab='',xlab='',col=col_transp2,pch=16,ylim=c(-3,4))
-par(new=TRUE)
-plot(UM4Rgam$gam,select=1,shade=TRUE,shade.col=rgb(255,180,102,60,maxColorValue=255),col="goldenrod2",lty=1,lwd=4,cex=1.8,yaxt='n',xaxt='n',cex.axis=1.5, cex.lab=1.6, xlab="Temperature (°C)",ylab=expression(' .\nM'*O[2]*~(standardized)*''),cex.main=1.6,rug=FALSE,ylim=c(-3,4))
-axis(side=2,at=c(-2,0,2,4),cex.axis=1.5)
-axis(side=1,at=c(5,15,25),cex.axis=1.5)
-par(new=TRUE)
-plot(UM4Rgam$gam,shade=TRUE,select=2,shade.col=rgb(100,255,0,60,maxColorValue=255),col="#669933",lty=1,lwd=4,cex=1.8, cex.axis=1.5, cex.lab=1.6, xlab="",ylab="",yaxt="n", xaxt="n",cex.main=1.8,rug=FALSE,ylim=c(-3,4))
-text(5,3.3,"C",cex=1.8)
-legend("bottomright", c("Barrens","Kelp"), lwd=3,col=c("goldenrod2", "#669933"), bty="n", cex=1.2)
-#mtext('Acute Protocol', side=3, line=0.5, font=1,cex=1.8,adj=0)
-
-# Ramped (TPC) MASS-INDEPENDENT MO2
-plot(scale(VO2_AFDW_ml.h)~Temp,data=subset(Urchin_Resp_TPCs,Experiment=='4.3'),yaxt='n',xaxt='n',ylab='',xlab='',col=col_transp2,pch=16,ylim=c(-2,2))
-par(new=TRUE)
-plot(UM5Rgamm$gam,select=1,shade=TRUE,shade.col=rgb(255,180,102,60,maxColorValue=255),col="goldenrod2",lty=1,lwd=4,cex=1.8,yaxt='n',xaxt='n', cex.axis=1.5, cex.lab=1.6,xlim=c(4,32),ylab='',xlab=('Temperature (°C)'),cex.main=1.6,rug=FALSE,ylim=c(-2,2))
-axis(side=2,at=c(-2,-1,-0,1,2),cex.axis=1.5)
-axis(side=1,at=c(5,15,25),cex.axis=1.5)
-par(new=TRUE)
-plot(UM5Rgamm$gam,shade=TRUE,select=2,shade.col=rgb(100,255,0,60,maxColorValue=255),col="#669933",lty=1,lwd=4,cex=1.8, cex.axis=1.5, cex.lab=1.6, xlab="",ylab="",yaxt="n", xaxt="n",cex.main=1.8,rug=FALSE,ylim=c(-2,2))
-text(5,1.5,"D",cex=1.8)
-legend("bottomright", c("Barrens","Kelp"), lwd=3,col=c("goldenrod2", "#669933"), bty="n", cex=1.2)
-#mtext('Ramping Protocol', side=3, line=0.5, font=1,adj=0,cex=1.8)
-
-dev.off()
-
-######
+###### MASS-INDEPENDENT MO2 FOR ACUTE AND RAMPING EXPOSURE DATA
 # Residual model using MR~weight residuals ACUTE
 Acute_sub<-Urchin_Resp_Acute %>% filter(rsquared>0.98 & Replicate_Chamber!="") %>% droplevels()
-Mres1<-lme(VO2_AFDW_ml.h~Wet_weight_g,random=~1|Location,data=Acute_sub,na.action=na.omit)
-Mres2<-gamm(VO2_AFDW_ml.h~s(Wet_weight_g),random=list(Location=~1),data=Acute_sub,na.action=na.omit)
+Mres1<-lme(VO2_ml.h~Wet_weight_g,random=~1|Location,data=Acute_sub,na.action=na.omit)
+Mres2<-gamm(VO2_ml.h~s(Wet_weight_g),random=list(Location=~1),data=Acute_sub,na.action=na.omit)
 res.VO2.WW=as.data.frame(residuals(Mres1));colnames(res.VO2.WW)=c("res.VO2.WW")
 res2.VO2.WW<-as.data.frame(residuals(Mres2$gam,type='response'));colnames(res2.VO2.WW)=c('res2.VO2.WW') # response residuals (= observed - fitted values)
 Acute_sub=cbind(Acute_sub,res.VO2.WW,res2.VO2.WW)
@@ -844,8 +782,8 @@ UM4Rgam<-gamm(scale(res2.VO2.WW)~s(Temperature_C,by=Habitat,k=4),random=list(Loc
 # looks like weight-effect is negligible 
 
 # Residual model using MR~weight residuals TPC
-Mres3<-lme(VO2_AFDW_ml.h~Wet_weight_g,random=~1|Replicate_Chamber,data=TPC_sub,na.action=na.omit)
-Mres4<-gamm(VO2_AFDW_ml.h~s(Wet_weight_g),random=list(Replicate_Chamber=~1),data=TPC_sub,na.action=na.omit)
+Mres3<-lme(VO2_ml.h~Wet_weight_g,random=~1|Replicate_Chamber,data=TPC_sub,na.action=na.omit)
+Mres4<-gamm(VO2_ml.h~s(Wet_weight_g),random=list(Replicate_Chamber=~1),data=TPC_sub,na.action=na.omit)
 res.VO2.WW=as.data.frame(residuals(Mres3));colnames(res.VO2.WW)=c("res.VO2.WW")
 res2.VO2.WW<-as.data.frame(residuals(Mres4$gam,type='response'));colnames(res2.VO2.WW)=c('res2.VO2.WW') # response residuals (= observed - fitted values)
 TPC_sub=cbind(TPC_sub,res.VO2.WW)
@@ -854,6 +792,66 @@ TPC_sub=cbind(TPC_sub,res.VO2.WW)
 UM5Rgamm<-gamm(scale(res.VO2.WW)~s(Temp,by=Habitat,k=4),random=list(Replicate_Chamber=~1),data=TPC_sub,na.action=na.omit)
 # looks like weight-effect is negligible 
 
+### SUPP FIG S6 MO2 gamms Acute & TPC (with mass-covariate (A,B); mass-independent (C,D))
+pdf(width = 10, useDingbats=TRUE,height = 9, bg="white", file="VO2_gamms_WeightCovar_MassIndep")
+
+par(mfrow=c(2,2))
+par(mar=c(4,5.5,1,0),oma=c(1,0.5,1,1))
+
+# Acute Absolute MO2 with mass-covariate
+plot(scale(VO2_ml.h)~Temperature_C,data=Urchin_Resp_Acute,yaxt='n',xaxt='n',ylab='',xlab='',col=col_transp2,pch=16,ylim=c(-3,4))
+par(new=TRUE)
+plot(UM4Wgamm$gam,select=1,shade=TRUE,shade.col=rgb(255,180,102,60,maxColorValue=255),col="goldenrod2",lty=1,lwd=4,cex=1.8,yaxt='n',xaxt='n',cex.axis=1.5, cex.lab=1.6, xlab="Temperature (°C)",ylab=expression(' .\nM'*O[2]~(mL ~ O[2] / h)*''),cex.main=1.6,rug=FALSE,ylim=c(-3,4))
+axis(side=2,at=c(-2,0,2,4),cex.axis=1.5)
+axis(side=1,at=c(5,15,25),cex.axis=1.5)
+par(new=TRUE)
+plot(UM4Wgamm$gam,shade=TRUE,select=2,shade.col=rgb(100,255,0,60,maxColorValue=255),col="#669933",lty=1,lwd=4,cex=1.8, cex.axis=1.5, cex.lab=1.6, xlab="",ylab="",yaxt="n", xaxt="n",cex.main=1.8,rug=FALSE,ylim=c(-3,4))
+text(5,3.3,"A",cex=1.8)
+legend("bottomright", c("Barrens","Kelp"), lwd=3,col=c("goldenrod2", "#669933"), bty="n", cex=1.2)
+mtext('Acute Protocol', side=3, line=0.5, font=1,cex=1.8,adj=0)
+
+# Ramped (TPC) Absolute MO2 with mass-covariate
+plot(scale(VO2_ml.h)~Temp,data=subset(Urchin_Resp_TPCs,Experiment=='4.3'),yaxt='n',xaxt='n',ylab='',xlab='',col=col_transp2,pch=16,ylim=c(-2,2))
+par(new=TRUE)
+plot(UM5Wgamm$gam,select=1,shade=TRUE,shade.col=rgb(255,180,102,60,maxColorValue=255),col="goldenrod2",lty=1,lwd=4,cex=1.8,yaxt='n',xaxt='n', cex.axis=1.5, cex.lab=1.6,xlim=c(4,32),ylab='',xlab=('Temperature (°C)'),cex.main=1.6,rug=FALSE,ylim=c(-2,2))
+axis(side=2,at=c(-2,-1,-0,1,2),cex.axis=1.5)
+axis(side=1,at=c(5,15,25),cex.axis=1.5)
+par(new=TRUE)
+plot(UM5Wgamm$gam,shade=TRUE,select=2,shade.col=rgb(100,255,0,60,maxColorValue=255),col="#669933",lty=1,lwd=4,cex=1.8, cex.axis=1.5, cex.lab=1.6, xlab="",ylab="",yaxt="n", xaxt="n",cex.main=1.8,rug=FALSE,ylim=c(-2,2))
+text(5,1.5,"B",cex=1.8)
+legend("bottomright", c("Barrens","Kelp"), lwd=3,col=c("goldenrod2", "#669933"), bty="n", cex=1.2)
+mtext('Ramping Protocol', side=3, line=0.5, font=1,adj=0,cex=1.8)
+
+# Acute MASS-INDEPENDENT MO2
+plot(scale(VO2_ml.h)~Temperature_C,data=Urchin_Resp_Acute,yaxt='n',xaxt='n',ylab='',xlab='',col=col_transp2,pch=16,ylim=c(-3,4))
+par(new=TRUE)
+plot(UM4Rgam$gam,select=1,shade=TRUE,shade.col=rgb(255,180,102,60,maxColorValue=255),col="goldenrod2",lty=1,lwd=4,cex=1.8,yaxt='n',xaxt='n',cex.axis=1.5, cex.lab=1.6, xlab="Temperature (°C)",ylab=expression(' .\nM'*O[2]*~(standardized)*''),cex.main=1.6,rug=FALSE,ylim=c(-3,4))
+axis(side=2,at=c(-2,0,2,4),cex.axis=1.5)
+axis(side=1,at=c(5,15,25),cex.axis=1.5)
+par(new=TRUE)
+plot(UM4Rgam$gam,shade=TRUE,select=2,shade.col=rgb(100,255,0,60,maxColorValue=255),col="#669933",lty=1,lwd=4,cex=1.8, cex.axis=1.5, cex.lab=1.6, xlab="",ylab="",yaxt="n", xaxt="n",cex.main=1.8,rug=FALSE,ylim=c(-3,4))
+text(5,3.3,"C",cex=1.8)
+legend("bottomright", c("Barrens","Kelp"), lwd=3,col=c("goldenrod2", "#669933"), bty="n", cex=1.2)
+#mtext('Acute Protocol', side=3, line=0.5, font=1,cex=1.8,adj=0)
+
+# Ramped (TPC) MASS-INDEPENDENT MO2
+plot(scale(VO2_ml.h)~Temp,data=subset(Urchin_Resp_TPCs,Experiment=='4.3'),yaxt='n',xaxt='n',ylab='',xlab='',col=col_transp2,pch=16,ylim=c(-2,2))
+par(new=TRUE)
+plot(UM5Rgamm$gam,select=1,shade=TRUE,shade.col=rgb(255,180,102,60,maxColorValue=255),col="goldenrod2",lty=1,lwd=4,cex=1.8,yaxt='n',xaxt='n', cex.axis=1.5, cex.lab=1.6,xlim=c(4,32),ylab='',xlab=('Temperature (°C)'),cex.main=1.6,rug=FALSE,ylim=c(-2,2))
+axis(side=2,at=c(-2,-1,-0,1,2),cex.axis=1.5)
+axis(side=1,at=c(5,15,25),cex.axis=1.5)
+par(new=TRUE)
+plot(UM5Rgamm$gam,shade=TRUE,select=2,shade.col=rgb(100,255,0,60,maxColorValue=255),col="#669933",lty=1,lwd=4,cex=1.8, cex.axis=1.5, cex.lab=1.6, xlab="",ylab="",yaxt="n", xaxt="n",cex.main=1.8,rug=FALSE,ylim=c(-2,2))
+text(5,1.5,"D",cex=1.8)
+legend("bottomright", c("Barrens","Kelp"), lwd=3,col=c("goldenrod2", "#669933"), bty="n", cex=1.2)
+#mtext('Ramping Protocol', side=3, line=0.5, font=1,adj=0,cex=1.8)
+
+dev.off()
+
+
+
+
+######## NOT INCLUDED ###########
 ### Residual model as a power function:
 library(drc)
 library(devtools)
@@ -862,14 +860,14 @@ library(aomisc)
 # For power function of the form: MR = a × M^b (MR=metabolic rate, a=intercept, M=mass and b=scaling exponent)
 D(expression(a * X^b), "X")
 
-powermodel <- drm(VO2_AFDW_ml.h~Wet_weight_g, fct = DRC.powerCurve(),
+powermodel <- drm(VO2_ml.h~Wet_weight_g, fct = DRC.powerCurve(),
              data = Acute_sub)
 
-powermodel2 <- nls(VO2_AFDW_ml.h ~ NLS.powerCurve(Wet_weight_g, a, b),
+powermodel2 <- nls(VO2_ml.h ~ NLS.powerCurve(Wet_weight_g, a, b),
              data = Acute_sub)
 
-powermodel3 <-nls(VO2_AFDW_ml.h~b*Wet_weight_g^z,start = list(b = 0.1, z = 1),data=Acute_sub)
-powermodel4 <-nls(VO2_AFDW_ml.h~b*Wet_weight_g^z,start = list(b = 0.1, z = 0.75),data=Acute_sub)
+powermodel3 <-nls(VO2_ml.h~b*Wet_weight_g^z,start = list(b = 0.1, z = 1),data=Acute_sub)
+powermodel4 <-nls(VO2_ml.h~b*Wet_weight_g^z,start = list(b = 0.1, z = 0.75),data=Acute_sub)
 # these models all give the ~same coefficients (M2, M3 and M4 are exactly the same)
 summary(powermodel2)
 plot(powermodel2, log="", main = "Power curve (b = )")
@@ -879,7 +877,7 @@ test=cbind(Acute_sub,res.VO2.WWpow)
 PowerResgam<-gamm(scale(res.VO2.WWpow)~s(Temperature_C,by=Habitat,k=4),random=list(Location=~1),data=test,na.action=na.omit) # using residuals from gamm
 
 # Plot
-plot(scale(VO2_AFDW_ml.h)~Temperature_C,data=Urchin_Resp_Acute,yaxt='n',xaxt='n',ylab='',xlab='',col=col_transp2,pch=16,ylim=c(-3,4))
+plot(scale(VO2_ml.h)~Temperature_C,data=Urchin_Resp_Acute,yaxt='n',xaxt='n',ylab='',xlab='',col=col_transp2,pch=16,ylim=c(-3,4))
 par(new=TRUE)
 plot(PowerResgam$gam,select=1,shade=TRUE,shade.col=rgb(255,180,102,60,maxColorValue=255),col="goldenrod2",lty=1,lwd=4,cex=1.8,yaxt='n',xaxt='n',cex.axis=1.5, cex.lab=1.6, xlab="Temperature (°C)",ylab=expression(' .\nM'*O[2]*~(standardized)*''),cex.main=1.6,rug=FALSE,ylim=c(-3,4))
 axis(side=2,at=c(-2,0,2,4),cex.axis=1.5)
@@ -891,73 +889,4 @@ legend("bottomright", c("Barrens","Kelp"), lwd=3,col=c("goldenrod2", "#669933"),
 #mtext('Acute Protocol', side=3, line=0.5, font=1,cex=1.8,adj=0)
 
 
-###################################
-#### Strongylocentrotus droebachiensis abundance-distribution (RLS data)
-#setwd("/Users/jmschuster/Desktop/PhD/Thesis writing/Chapter 2")
-Strongy_AB<-read.csv('Reef_Life_Survey_(RLS)_StrongylocentrotusDroe_surveys.csv')
-
-Strongy_AB<-aggregate(Total~SurveyID+SiteCode+Ecoregion+Realm+Country+SiteLat+SiteLong+SurveyDate+Depth+geom,data=Strongy_AB,FUN=sum)
-
-# export to manually add 2020 RLS surveys from NL
-write.xlsx(Strongy_AB,file="Strongy_AB_RLS.xlsx",col.names=TRUE)
-Strongy_AB<-read.csv("Strongy_AB_RLSplus.csv")
-
-ggplot(Strongy_AB,aes(x=SiteLat,y=Total))+geom_point(colour='#330066',size=2,alpha=0.5)+
-  theme_bw(base_size=15)+xlab("Latitude °")+
-  ylab('Abundance (# per survey)')+xlim(0,90)
-
-ggplot(Strongy_AB,aes(x=Survey.T.Match,y=Total))+geom_point(colour='#330066',size=2,alpha=0.5)+
-  theme_bw(base_size=15)+xlab("Temperature °C")+
-  ylab('Abundance (# per survey)')+xlim(-1,32)
-
-################ SEM FOR URCHINS
-Urchins<-na.omit(Urchin_Resp_TPCs)
-
-Urchin_Resp_TPCs <- Urchin_Resp_TPCs %>% filter (Habitat != 'Blank') %>% droplevels
-
-# No direct habitat effect
-rate.mass <- lm(MR_AFDW_ml.h.g ~ AFDW_g, data=Urchin_Resp_TPCs, na.action=na.omit)
-hist(residuals(rate.mass))
-
-mass.hab <- lm(AFDW_g ~ Habitat, data = subset(Urchin_Resp_TPCs, Habitat != "Blank"), na.action=na.omit)
-urchin_sem<-psem(rate.mass, mass.hab)
-summary(urchin_sem)
-
-# Direct habitat effect
-rate.full <- lm(MR_AFDW_ml.h.g ~ AFDW_g+Habitat, data=subset(Urchin_Resp_TPCs, Temp=='32'), na.action=na.omit)
-full.sem<-psem(rate.full)
-summary(full.sem)
-
-## NOT ENOUGH DATA TO DO THIS.... 
-
-##################################
-######### UNUSED FIGURES
-
-#### WEIGHTS ACROSS TEMPS
-# Wet Weights
-pdf(width = 9, useDingbats=TRUE,height = 4, bg="white", file="Urchin_Wet_Weights_Exp1-3")
-
-ggplot(Urchin_Resp_Acute,aes(x=as.factor(Temperature_C), y=Wet_weight_g,fill=Habitat))+geom_boxplot()+xlab('Temperature (°C)')+ylab('Wet Weight (g)')+theme_bw(base_size=15)+
-  scale_fill_manual(values=c("#330066", "#669933"))+theme(legend.position=c(0.2,0.8),legend.title=element_text(size=14,face='bold'),legend.text=element_text(size=12))+facet_wrap(~Location,scale='free')+
-  theme(strip.text.x = element_text(size = 16, color = "white", face = "bold"),strip.background = element_rect(fill="black"))
-
-dev.off()
-
-# Dry Weights
-pdf(width = 9, useDingbats=TRUE,height = 4, bg="white", file="Urchin_Dry_Weights_Exp1-3")
-
-ggplot(Urchin_Resp_Acute,aes(x=as.factor(Temperature_C), y=Dry_Weight_g,fill=Habitat))+geom_boxplot()+xlab('Temperature (°C)')+ylab('Dry Weight (g)')+theme_bw(base_size=15)+
-  scale_fill_manual(values=c("#330066", "#669933"))+theme(legend.position=c(0.2,0.8),legend.title=element_text(size=14,face='bold'),legend.text=element_text(size=12))+facet_wrap(~Location,scale='free')+
-  theme(strip.text.x = element_text(size = 16, color = "white", face = "bold"),strip.background = element_rect(fill="black"))
-
-dev.off()
-
-# Ashed Weights
-pdf(width = 9, useDingbats=TRUE,height = 4, bg="white", file="Urchin_Ashed_Weights_Exp1-3")
-
-ggplot(subset(Urchin_Resp_Acute,AFDW_g>0),aes(x=as.factor(Temperature_C), y=AFDW_g,fill=Habitat))+geom_boxplot()+xlab('Temperature (°C)')+ylab('Ash-free Dry Weight (g)')+theme_bw(base_size=15)+
-  scale_fill_manual(values=c("#330066", "#669933"))+theme(legend.position='none',legend.title=element_text(size=14,face='bold'),legend.text=element_text(size=12))+facet_wrap(~Location,scale='free')+
-  theme(strip.text.x = element_text(size = 16, color = "white", face = "bold"),strip.background = element_rect(fill="black"))
-
-dev.off()
-
+#### END OF SCRIPT ####
